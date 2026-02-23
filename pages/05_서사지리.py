@@ -148,7 +148,8 @@ with tab_b:
 
     @st.cache_data(ttl=600)
     def load_pairs(region):
-        return get_narrative_geo_pairs(conn, region=region, limit=500)
+        rows = get_narrative_geo_pairs(conn, region=region, limit=500)
+        return [dict(r) for r in rows]
 
     pairs = load_pairs(region_arg)
 
