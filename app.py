@@ -25,13 +25,12 @@ html, body, [class*="css"] {
         radial-gradient(ellipse at 80% 20%, rgba(196,163,90,0.04) 0%, transparent 60%);
 }
 
-/* ── Streamlit 상단 헤더 숨김 (페이지 타이틀 잘림 방지) ── */
-[data-testid="stHeader"] { display: none !important; }
+/* ── 마크다운 컨테이너 클리핑 방지 ── */
 [data-testid="stMarkdownContainer"] { overflow: visible !important; }
 
-/* ── 메인 콘텐츠 패딩 ── */
+/* ── 메인 콘텐츠 패딩 (헤더 높이만큼 확보) ── */
 .block-container {
-    padding-top: 2rem !important;
+    padding-top: 4.5rem !important;
     padding-bottom: 2.5rem;
     max-width: 1200px;
 }

@@ -51,9 +51,8 @@ html, body, [class*="css"] { font-family: 'Nanum Myeongjo', Georgia, serif !impo
         radial-gradient(ellipse at 20% 50%, rgba(139,26,26,0.03) 0%, transparent 60%),
         radial-gradient(ellipse at 80% 20%, rgba(196,163,90,0.04) 0%, transparent 60%);
 }
-[data-testid="stHeader"] { display: none !important; }
 [data-testid="stMarkdownContainer"] { overflow: visible !important; }
-.block-container { padding-top: 2rem !important; padding-bottom: 2rem; max-width: 1200px; }
+.block-container { padding-top: 4.5rem !important; padding-bottom: 2rem; max-width: 1200px; }
 [data-testid="stSidebar"] { background-color: #EDE5D0; border-right: 1px solid #C4A35A44; }
 h1 { color: #2C1810 !important; font-weight: 800 !important;
      border-bottom: 2px solid #8B1A1A; padding-bottom: 0.4rem; margin-bottom: 0.8rem !important; }
