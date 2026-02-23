@@ -170,22 +170,48 @@ st.markdown("""
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-col1, col2, col3, col4 = st.columns(4)
+# SVG 아이콘 (단청 적색 라인 스타일)
+ICONS = {
+    "탐색": """<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+      fill="none" stroke="#8B1A1A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+    </svg>""",
+    "이해": """<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+      fill="none" stroke="#8B1A1A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+    </svg>""",
+    "활용": """<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+      fill="none" stroke="#8B1A1A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+      <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+      <path d="M2 2l7.586 7.586"/>
+      <circle cx="11" cy="11" r="2"/>
+    </svg>""",
+    "기여": """<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+      fill="none" stroke="#8B1A1A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/>
+      <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+    </svg>""",
+}
 
 CARDS = [
-    ("col1", "🗺️", "탐색", "채록지 지도를 통해 전국의 설화·민요·무가 자료를 시각적으로 탐색합니다.", "지도로 탐색하기", "btn_explore", "pages/01_탐색_지도시각화.py"),
-    ("col2", "📖", "이해", "모티프·이본을 비교 분석하고 AI와 함께 설화를 깊이 이해합니다.", "모티프 탐색하기", "btn_understand", "pages/02_이해_모티프탐색.py"),
-    ("col3", "✏️", "활용", "설화를 현대어·아동용·영문·대본 등 다양한 형식으로 재가공합니다.", "현대역 생성하기", "btn_use", "pages/03_활용_현대역.py"),
-    ("col4", "🤝", "기여", "내가 알고 있는 설화를 직접 기록해 플랫폼에 기여할 수 있습니다.", "설화 입력하기", "btn_contribute", "pages/04_기여_설화입력.py"),
+    ("탐색", "채록지 지도를 통해 전국의 설화·민요·무가 자료를 시각적으로 탐색합니다.", "지도로 탐색하기", "btn_explore", "pages/01_탐색_지도시각화.py"),
+    ("이해", "모티프·이본을 비교 분석하고 AI와 함께 설화를 깊이 이해합니다.", "모티프 탐색하기", "btn_understand", "pages/02_이해_모티프탐색.py"),
+    ("활용", "설화를 현대어·아동용·영문·대본 등 다양한 형식으로 재가공합니다.", "현대역 생성하기", "btn_use", "pages/03_활용_현대역.py"),
+    ("기여", "내가 알고 있는 설화를 직접 기록해 플랫폼에 기여할 수 있습니다.", "설화 입력하기", "btn_contribute", "pages/04_기여_설화입력.py"),
 ]
 
-for col, icon, title, desc, btn_label, btn_key, page in zip(
-    [col1, col2, col3, col4], *zip(*[c[1:] for c in CARDS])
+col1, col2, col3, col4 = st.columns(4)
+
+for col, (title, desc, btn_label, btn_key, page) in zip(
+    [col1, col2, col3, col4], CARDS
 ):
     with col:
         st.markdown(f"""
         <div class="main-card">
-          <div style="font-size:1.8rem; margin-bottom:0.4rem;">{icon}</div>
+          <div style="margin-bottom:0.7rem;">{ICONS[title]}</div>
           <div style="font-size:1.05rem; font-weight:700; color:#2C1810;
                       border-bottom:1px solid #C4A35A66; padding-bottom:0.4rem;
                       margin-bottom:0.6rem;">{title}</div>
