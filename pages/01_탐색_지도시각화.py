@@ -9,7 +9,7 @@ from streamlit_folium import st_folium
 
 st.set_page_config(page_title="탐색 — 지도 시각화", layout="wide")
 
-DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'items_설화.csv')
+DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'items_설화.csv'))
 
 CATEGORY_COLORS = {
     "설화": "#3B82F6",

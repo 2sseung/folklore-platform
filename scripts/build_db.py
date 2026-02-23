@@ -7,10 +7,10 @@ import csv
 import json
 import os
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
-CSV_PATH = os.path.join(DATA_DIR, 'items_설화.csv')
-JSONL_PATH = os.path.join(DATA_DIR, 'motifs_merged.jsonl')
-DB_PATH = os.path.join(DATA_DIR, 'folklore.db')
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+CSV_PATH = os.path.join(ROOT_DIR, 'items_설화.csv')
+JSONL_PATH = os.path.join(ROOT_DIR, 'motifs_merged.jsonl')
+DB_PATH = os.path.join(ROOT_DIR, 'folklore.db')
 
 DDL = """
 CREATE TABLE IF NOT EXISTS items (

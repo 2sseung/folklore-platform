@@ -5,7 +5,17 @@ import sqlite3
 import os
 from functools import lru_cache
 
-DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'folklore.db')
+DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'folklore.db'))
+
+
+def ensure_db():
+    """DB가 없으면 build_db.py를 실행해 생성한다."""
+    if os.path.exists(DB_PATH):
+        return
+    import subprocess, sys
+    scripts_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'scripts'))
+    build_script = os.path.join(scripts_dir, 'build_db.py')
+    subprocess.run([sys.executable, build_script], check=True)
 
 
 def get_conn():

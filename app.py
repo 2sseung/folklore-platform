@@ -1,10 +1,24 @@
 import streamlit as st
+import sys, os
+sys.path.insert(0, os.path.dirname(__file__))
 
 st.set_page_config(
     page_title="한국구비문학대계 인터랙티브 플랫폼",
     page_icon="📚",
     layout="wide",
 )
+
+# DB 자동 빌드 (최초 실행 또는 재시작 후 DB 없을 때)
+from utils.db import ensure_db, DB_PATH
+if not os.path.exists(DB_PATH):
+    with st.spinner("데이터베이스를 처음 구축하는 중입니다... (수 분 소요)"):
+        try:
+            ensure_db()
+            st.success("데이터베이스 구축 완료!")
+            st.rerun()
+        except Exception as e:
+            st.error(f"DB 빌드 실패: {e}")
+            st.stop()
 
 st.title("📚 한국구비문학대계 인터랙티브 플랫폼")
 st.markdown("한국 구비문학 자료를 탐색하고, 이해하고, 활용하고, 기여하는 공간입니다.")
