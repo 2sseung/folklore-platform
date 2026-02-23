@@ -9,10 +9,10 @@ import anthropic
 from utils.db import get_conn, search_items_by_title, get_item_by_id
 
 load_dotenv()
-st.set_page_config(page_title="활용 — 현대역 & 재가공", layout="wide")
+st.set_page_config(page_title="현대역 및 콘텐츠 생성", layout="wide")
 from utils.style import inject_css, page_title
 inject_css()
-page_title("활용", "현대역 & 재가공")
+page_title("활용", "현대역 및 콘텐츠 생성")
 
 conn = get_conn()
 

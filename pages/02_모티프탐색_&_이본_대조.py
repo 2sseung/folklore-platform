@@ -13,10 +13,10 @@ from utils.db import (
 )
 
 load_dotenv()
-st.set_page_config(page_title="이해 — 모티프 탐색", layout="wide")
+st.set_page_config(page_title="모티프탐색 & 이본 대조", layout="wide")
 from utils.style import inject_css, page_title, ICONS
 inject_css()
-page_title("이해", "모티프 탐색 & 이본 대조")
+page_title("이해", "모티프탐색 & 이본 대조")
 
 conn = get_conn()
 

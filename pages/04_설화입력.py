@@ -10,10 +10,10 @@ import json
 from utils.db import get_conn, insert_contribution, get_contributions
 
 load_dotenv()
-st.set_page_config(page_title="기여 — 설화 입력", layout="wide")
+st.set_page_config(page_title="설화입력", layout="wide")
 from utils.style import inject_css, page_title, ICONS
 inject_css()
-page_title("기여", "설화 입력")
+page_title("기여", "설화입력")
 
 st.info(
     "내가 알고 있는 설화를 직접 기록해 플랫폼에 기여할 수 있습니다.\n"
