@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import streamlit as st
 import pandas as pd
 import folium
-from folium.plugins import MarkerCluster
+from folium.plugins import FastMarkerCluster
 from streamlit_folium import st_folium
 
 st.set_page_config(page_title="탐색 — 지도 시각화", layout="wide")
@@ -25,6 +25,20 @@ def load_data():
     df['lat'] = pd.to_numeric(df['lat'], errors='coerce')
     df['lng'] = pd.to_numeric(df['lng'], errors='coerce')
     return df
+
+@st.cache_data
+def prepare_map_rows(cats: tuple):
+    """FastMarkerCluster용 [lat, lng, color, title, id] 리스트 — 캐싱"""
+    sub = df[df['category'].isin(cats)].dropna(subset=['lat', 'lng'])
+    rows = []
+    for _, r in sub.iterrows():
+        color = CATEGORY_COLORS.get(r.get('category', ''), '#888888')
+        rows.append([
+            r['lat'], r['lng'], color,
+            str(r.get('title', '(제목 없음)')),
+            str(r.get('id', '')),
+        ])
+    return rows
 
 df = load_data()
 
@@ -54,48 +68,30 @@ if len(no_coords) > 0:
     st.info(f"좌표 정보 없어 지도에서 제외된 자료: {len(no_coords)}건 (전체 {total}건 중)")
 
 # ── 지도 생성 ──────────────────────────────────────────────────────────────────
+
+# JS 콜백: 브라우저에서 직접 CircleMarker 렌더링 (FastMarkerCluster)
+MARKER_CALLBACK = """
+function(row) {
+    var marker = L.circleMarker([row[0], row[1]], {
+        radius: 6,
+        color: row[2],
+        fillColor: row[2],
+        fillOpacity: 0.8,
+        weight: 1.5
+    });
+    marker.bindPopup('<b>' + row[3] + '</b><br/><small>' + row[4] + '</small>');
+    marker.bindTooltip(row[3], {sticky: true});
+    return marker;
+}
+"""
+
 with map_col:
     m = folium.Map(location=[36.5, 127.5], zoom_start=6, tiles="CartoDB positron")
 
-    # 카테고리별 MarkerCluster 분리
-    clusters = {}
-    for cat in selected_cats:
-        clusters[cat] = MarkerCluster(name=cat).add_to(m)
-
-    for _, row in has_coords.iterrows():
-        cat = row.get('category', '')
-        color = CATEGORY_COLORS.get(cat, '#888888')
-        cluster = clusters.get(cat)
-        if cluster is None:
-            continue
-
-        popup_html = f"<b>{row.get('title','(제목 없음)')}</b><br/><small>{row.get('id','')}</small>"
-
-        folium.CircleMarker(
-            location=[row['lat'], row['lng']],
-            radius=6,
-            color=color,
-            fill=True,
-            fill_color=color,
-            fill_opacity=0.8,
-            popup=folium.Popup(popup_html, max_width=200),
-            tooltip=row.get('title', ''),
-        ).add_to(cluster)
-
-    # 기여 설화도 표시 (DB 있을 경우)
-    try:
-        from utils.db import get_conn, get_contributions
-        conn = get_conn()
-        contribs = get_contributions(conn)
-        conn.close()
-        contrib_cluster = MarkerCluster(name="기여 설화").add_to(m)
-        for c in contribs:
-            # 기여 설화는 위경도 없으므로 지역명만 표시
-            pass
-    except Exception:
-        pass
-
-    folium.LayerControl().add_to(m)
+    if selected_cats:
+        map_rows = prepare_map_rows(tuple(selected_cats))
+        if map_rows:
+            FastMarkerCluster(data=map_rows, callback=MARKER_CALLBACK).add_to(m)
 
     map_data = st_folium(m, width="100%", height=600, returned_objects=["last_object_clicked_popup"])
 
