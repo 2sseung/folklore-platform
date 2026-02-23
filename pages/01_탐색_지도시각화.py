@@ -8,6 +8,8 @@ from folium.plugins import FastMarkerCluster
 from streamlit_folium import st_folium
 
 st.set_page_config(page_title="탐색 — 지도 시각화", layout="wide")
+from utils.style import inject_css, page_title
+inject_css()
 
 DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'items_설화.csv'))
 
@@ -50,7 +52,7 @@ for cat, color in CATEGORY_COLORS.items():
         selected_cats.append(cat)
 
 # ── 레이아웃 ──────────────────────────────────────────────────────────────────
-st.title("🗺️ 탐색 — 지도 시각화")
+page_title("탐색", "지도 시각화")
 
 map_col, info_col = st.columns([7, 3])
 

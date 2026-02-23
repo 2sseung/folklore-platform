@@ -11,7 +11,9 @@ from utils.db import get_conn, insert_contribution, get_contributions
 
 load_dotenv()
 st.set_page_config(page_title="기여 — 설화 입력", layout="wide")
-st.title("🤝 기여 — 설화 입력")
+from utils.style import inject_css, page_title, ICONS
+inject_css()
+page_title("기여", "설화 입력")
 
 st.info(
     "내가 알고 있는 설화를 직접 기록해 플랫폼에 기여할 수 있습니다.\n"
@@ -45,14 +47,16 @@ with tab_input:
 
     # AI 모티프 태깅 (폼 밖)
     st.divider()
-    st.subheader("🤖 AI 모티프 태깅 초안")
+    st.markdown(f"""<div style="display:flex;align-items:center;gap:0.5rem;margin:1rem 0 0.4rem">
+  {ICONS['AI']}<span style="font-size:1.1rem;font-weight:700;color:#4A2010;">AI 모티프 태깅 초안</span>
+</div>""", unsafe_allow_html=True)
     st.caption("본문 입력 후 아래 버튼을 눌러 AI가 제안하는 모티프 초안을 확인하세요.")
 
     if 'motif_draft' not in st.session_state:
         st.session_state['motif_draft'] = ''
 
     motif_content = st.session_state.get('_draft_content', '')
-    analyze_btn = st.button("🔍 모티프 분석하기")
+    analyze_btn = st.button("모티프 분석하기")
     if analyze_btn:
         if not content or len(content) < 10:
             st.warning("본문을 먼저 입력하세요.")
@@ -93,7 +97,7 @@ JSON만 출력하고 다른 설명은 하지 마세요."""
                     st.session_state['_draft_content'] = content
 
     if st.session_state['motif_draft']:
-        st.caption("⚠️ AI가 제안한 초안입니다. 검토 후 수정하세요.")
+        st.markdown('<p class="ai-note">AI가 제안한 초안입니다. 검토 후 수정하세요.</p>', unsafe_allow_html=True)
         edited_draft = st.text_area("모티프 초안 (편집 가능)", st.session_state['motif_draft'], height=200)
         st.session_state['motif_draft'] = edited_draft
 
@@ -123,7 +127,7 @@ JSON만 출력하고 다른 설명은 하지 마세요."""
                 'motif_draft': st.session_state.get('motif_draft', ''),
             }
             insert_contribution(conn, data)
-            st.success(f"✅ 설화 「{title}」이(가) 성공적으로 제출되었습니다!")
+            st.success(f"설화 「{title}」이(가) 성공적으로 제출되었습니다.")
             st.session_state['motif_draft'] = ''
             st.session_state.pop('_draft_content', None)
 

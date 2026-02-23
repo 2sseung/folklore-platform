@@ -10,7 +10,9 @@ from utils.db import get_conn, search_items_by_title, get_item_by_id
 
 load_dotenv()
 st.set_page_config(page_title="활용 — 현대역 & 재가공", layout="wide")
-st.title("✏️ 활용 — 현대역 & 재가공")
+from utils.style import inject_css, page_title
+inject_css()
+page_title("활용", "현대역 & 재가공")
 
 conn = get_conn()
 
@@ -22,7 +24,7 @@ with col_search:
     keyword = st.text_input("제목 검색", placeholder="제목 키워드 입력")
 with col_random:
     st.markdown("<br/>", unsafe_allow_html=True)
-    if st.button("🎲 랜덤 추천"):
+    if st.button("무작위 추천"):
         rows = conn.execute(
             "SELECT id FROM items WHERE content IS NOT NULL AND content != '' ORDER BY RANDOM() LIMIT 1"
         ).fetchone()
@@ -78,7 +80,7 @@ selected_format = st.radio("형식", list(FORMAT_OPTIONS.keys()), horizontal=Tru
 # ── 생성 ─────────────────────────────────────────────────────────────────────
 st.divider()
 
-if st.button("⚡ 생성하기", type="primary"):
+if st.button("생성하기", type="primary"):
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     if not api_key:
         st.error(".env 파일에 ANTHROPIC_API_KEY를 설정하세요.")
@@ -110,7 +112,7 @@ if st.button("⚡ 생성하기", type="primary"):
 
             generated_text = st.write_stream(stream_response())
             st.markdown("</div>", unsafe_allow_html=True)
-            st.caption("⚠️ AI가 생성한 파생 텍스트로, 원본 전사본과 다를 수 있습니다")
+            st.markdown('<p class="ai-note">AI가 생성한 파생 텍스트로, 원본 전사본과 다를 수 있습니다</p>', unsafe_allow_html=True)
 
         st.session_state['generated_text'] = generated_text
         st.session_state['generated_format'] = selected_format
@@ -129,7 +131,7 @@ if 'generated_text' in st.session_state and st.session_state['generated_text']:
 
     fname = f"{gen_title}_{gen_format}.txt"
     st.download_button(
-        label="📥 텍스트 파일 다운로드",
+        label="텍스트 파일 내려받기",
         data=gen_text.encode('utf-8'),
         file_name=fname,
         mime="text/plain",

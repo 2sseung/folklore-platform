@@ -14,7 +14,9 @@ from utils.db import (
 
 load_dotenv()
 st.set_page_config(page_title="이해 — 모티프 탐색", layout="wide")
-st.title("📖 이해 — 모티프 탐색 & 이본 대조")
+from utils.style import inject_css, page_title, ICONS
+inject_css()
+page_title("이해", "모티프 탐색 & 이본 대조")
 
 conn = get_conn()
 
@@ -63,7 +65,7 @@ nu_rows = get_narrative_units(conn, focus_id)
 narrative_units = [r['unit_text'] for r in nu_rows]
 
 st.divider()
-st.subheader(f"📄 {item['title']}")
+st.subheader(item['title'])
 
 meta_col, badge_col = st.columns([3, 2])
 with meta_col:
@@ -110,7 +112,9 @@ if narrative_units:
 
 # ── 이본 대조 ─────────────────────────────────────────────────────────────────
 st.divider()
-st.subheader("🔄 이본 대조")
+st.markdown(f"""<div style="display:flex;align-items:center;gap:0.5rem;margin:1rem 0 0.5rem">
+  {ICONS['비교']}<span style="font-size:1.1rem;font-weight:700;color:#4A2010;">이본 대조</span>
+</div>""", unsafe_allow_html=True)
 
 similar = get_similar_items_by_motif(conn, focus_id)
 if not similar:
@@ -129,7 +133,7 @@ else:
             checked.append(sim['id'])
 
     if len(checked) == 2:
-        if st.button("🔍 대조 보기", type="primary"):
+        if st.button("대조 보기", type="primary"):
             st.session_state['compare_ids'] = checked
 
     elif len(checked) > 2:
@@ -165,7 +169,9 @@ if len(compare_ids) == 2:
 
 # ── LLM Q&A ──────────────────────────────────────────────────────────────────
 st.divider()
-st.subheader("🤖 AI Q&A")
+st.markdown(f"""<div style="display:flex;align-items:center;gap:0.5rem;margin:1rem 0 0.5rem">
+  {ICONS['AI']}<span style="font-size:1.1rem;font-weight:700;color:#4A2010;">AI 질의응답</span>
+</div>""", unsafe_allow_html=True)
 
 if not content:
     st.warning("본문 전사가 없는 자료입니다. Q&A 기능을 사용할 수 없습니다.")
@@ -211,7 +217,7 @@ else:
                             yield text
 
                 response = st.write_stream(stream_response())
-                st.caption("⚠️ AI 생성 응답으로 원본 전사본과 다를 수 있습니다")
+                st.markdown('<p class="ai-note">AI 생성 응답으로 원본 전사본과 다를 수 있습니다</p>', unsafe_allow_html=True)
                 st.session_state['qa_history'].append({'q': question, 'a': response})
 
 conn.close()
