@@ -5,11 +5,14 @@ import streamlit as st
 from dotenv import load_dotenv
 import anthropic
 
+import folium
+from streamlit_folium import st_folium
+
 from utils.db import (
     get_conn, get_item_by_id, search_items_by_title, search_items_by_motif,
     get_all_motifs, get_motifs_for_item, get_atu_types_for_item,
     get_subjects_for_item, get_narrative_units, get_item_meta,
-    get_similar_items_by_motif,
+    get_similar_items_by_motif, get_places_for_item,
 )
 
 load_dotenv()
@@ -109,6 +112,68 @@ if narrative_units:
     st.markdown("**서사 단락**")
     for i, unit in enumerate(narrative_units, 1):
         st.info(f"**{i}.** {unit}")
+
+# ── 서사 지명 미니맵 ──────────────────────────────────────────────────────────
+places = get_places_for_item(conn, focus_id)
+geo_places = [p for p in places if p['lat'] is not None and p['lng'] is not None]
+has_collect = item.get('lat') is not None and item.get('lng') is not None
+
+if has_collect or geo_places:
+    st.divider()
+    st.markdown(f"""<div style="display:flex;align-items:center;gap:0.5rem;margin:1rem 0 0.5rem">
+  {ICONS['서사지리']}<span style="font-size:1.1rem;font-weight:700;color:#4A2010;">채록지 · 서사 지명</span>
+</div>""", unsafe_allow_html=True)
+
+    all_lats = []
+    all_lngs = []
+    if has_collect:
+        all_lats.append(item['lat']); all_lngs.append(item['lng'])
+    for p in geo_places:
+        all_lats.append(p['lat']); all_lngs.append(p['lng'])
+
+    center = [sum(all_lats) / len(all_lats), sum(all_lngs) / len(all_lngs)]
+    m = folium.Map(location=center, zoom_start=7, tiles="CartoDB positron")
+
+    if has_collect:
+        folium.CircleMarker(
+            location=[item['lat'], item['lng']],
+            radius=8, color="#1D4ED8", fill=True, fill_color="#3B82F6", fill_opacity=0.85,
+            tooltip=f"채록지: {item.get('location') or item.get('district') or ''}",
+        ).add_to(m)
+
+    for p in geo_places:
+        folium.Marker(
+            location=[p['lat'], p['lng']],
+            icon=folium.DivIcon(html=(
+                '<div style="font-size:18px;line-height:1;margin-top:-9px;margin-left:-9px">'
+                '▲</div>'
+            ), icon_size=(18, 18), icon_anchor=(9, 9)),
+            tooltip=f"{ICONS['지명']} {p['place_name']}",
+        ).add_to(m)
+        if has_collect:
+            folium.PolyLine(
+                locations=[[item['lat'], item['lng']], [p['lat'], p['lng']]],
+                color="#8B1A1A", weight=1.5, dash_array="6 4", opacity=0.5,
+            ).add_to(m)
+
+    legend_html = (
+        '<div style="font-size:0.8rem;color:#4A2010;margin-top:0.3rem;">'
+        '<span style="color:#3B82F6">●</span> 채록지 &nbsp;&nbsp;'
+        '<span style="color:#8B1A1A">▲</span> 서사 지명'
+        '</div>'
+    )
+    st.markdown(legend_html, unsafe_allow_html=True)
+    st_folium(m, width="100%", height=320, returned_objects=[])
+
+    if geo_places:
+        with st.expander(f"서사 지명 목록 ({len(geo_places)}건 좌표 확인)"):
+            for p in geo_places:
+                status = p['geocode_status'] or ''
+                st.markdown(
+                    f"{ICONS['지명']} **{p['place_name']}** "
+                    f"<span style='color:#9A7A6A;font-size:0.8rem'>({p['lat']:.4f}, {p['lng']:.4f}) {status}</span>",
+                    unsafe_allow_html=True,
+                )
 
 # ── 이본 대조 ─────────────────────────────────────────────────────────────────
 st.divider()

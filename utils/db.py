@@ -140,6 +140,52 @@ def get_places_for_item(conn, item_id):
     """, (item_id,)).fetchall()
 
 
+def search_places_by_name(conn, keyword, limit=30):
+    return conn.execute(
+        "SELECT place_name, lat, lng FROM places WHERE place_name LIKE ? AND lat IS NOT NULL AND lng IS NOT NULL LIMIT ?",
+        (f'%{keyword}%', limit)
+    ).fetchall()
+
+
+def get_items_by_place_name(conn, place_name, limit=200):
+    return conn.execute("""
+        SELECT i.id, i.title, i.region, i.district, i.category, i.lat, i.lng
+        FROM items i
+        JOIN item_places ip ON i.id = ip.item_id
+        JOIN places p ON ip.place_id = p.id
+        WHERE p.place_name = ?
+        LIMIT ?
+    """, (place_name, limit)).fetchall()
+
+
+def get_narrative_geo_pairs(conn, region=None, limit=400):
+    """채록지 + 서사 지명 좌표 쌍 (둘 다 있는 경우)"""
+    if region:
+        return conn.execute("""
+            SELECT i.id, i.title, i.region, i.district,
+                   i.lat AS c_lat, i.lng AS c_lng,
+                   p.place_name, p.lat AS p_lat, p.lng AS p_lng
+            FROM items i
+            JOIN item_places ip ON i.id = ip.item_id
+            JOIN places p ON ip.place_id = p.id
+            WHERE i.lat IS NOT NULL AND i.lng IS NOT NULL
+              AND p.lat IS NOT NULL AND p.lng IS NOT NULL
+              AND i.region LIKE ?
+            LIMIT ?
+        """, (f'%{region}%', limit)).fetchall()
+    return conn.execute("""
+        SELECT i.id, i.title, i.region, i.district,
+               i.lat AS c_lat, i.lng AS c_lng,
+               p.place_name, p.lat AS p_lat, p.lng AS p_lng
+        FROM items i
+        JOIN item_places ip ON i.id = ip.item_id
+        JOIN places p ON ip.place_id = p.id
+        WHERE i.lat IS NOT NULL AND i.lng IS NOT NULL
+          AND p.lat IS NOT NULL AND p.lng IS NOT NULL
+        LIMIT ?
+    """, (limit,)).fetchall()
+
+
 # ─── 이본 대조 ────────────────────────────────────────────────────────────────
 
 def get_similar_items_by_motif(conn, item_id, limit=20):

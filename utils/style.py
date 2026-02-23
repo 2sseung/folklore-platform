@@ -25,7 +25,19 @@ ICONS = {
       <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/>
       <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
     </svg>""",
+    # 서사지리 전용 (32px — page_title용)
+    "서사지리": """<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+      fill="none" stroke="#8B1A1A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="5" cy="18" r="2.5"/>
+      <circle cx="19" cy="6" r="2.5"/>
+      <path d="M7 16.5 C 10 11 14 9 17 7.5" stroke-dasharray="3 2"/>
+    </svg>""",
     # 소형 인라인 아이콘
+    "지명": """<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+      <circle cx="12" cy="10" r="3"/>
+    </svg>""",
     "비교": """<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>
