@@ -154,8 +154,8 @@ if not os.path.exists(DB_PATH):
 
 st.markdown("""
 <div style="text-align:center; padding: 2rem 0 1rem 0;">
-  <div style="font-size:0.85rem; color:#8B1A1A; letter-spacing:4px; margin-bottom:0.5rem;">
-    한국학중앙연구원 X KUCLAB
+  <div style="font-size:1.05rem; color:#8B1A1A; letter-spacing:4px; margin-bottom:0.5rem;">
+    KUCLAB
   </div>
   <h1 style="font-size:2.2rem; font-weight:800; color:#2C1810; border:none; padding:0; margin:0;">
     한국구비문학대계
