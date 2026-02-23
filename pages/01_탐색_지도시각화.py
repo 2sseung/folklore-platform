@@ -93,16 +93,19 @@ with map_col:
         if map_rows:
             FastMarkerCluster(data=map_rows, callback=MARKER_CALLBACK).add_to(m)
 
-    map_data = st_folium(m, width="100%", height=600, returned_objects=["last_object_clicked_popup"])
+    map_data = st_folium(m, width="100%", height=600, returned_objects=["last_object_clicked"])
 
 # ── 클릭 이벤트 처리 ──────────────────────────────────────────────────────────
-clicked_popup = map_data.get("last_object_clicked_popup") if map_data else None
-if clicked_popup:
-    # 팝업 HTML에서 id 추출
-    import re
-    match = re.search(r'<small>(.*?)</small>', str(clicked_popup))
-    if match:
-        st.session_state['selected_id'] = match.group(1)
+clicked = map_data.get("last_object_clicked") if map_data else None
+if clicked and clicked.get("lat") and clicked.get("lng"):
+    clat, clng = clicked["lat"], clicked["lng"]
+    # 소수점 6자리 반올림 후 매칭 (부동소수점 오차 방지)
+    matched = df[
+        (df['lat'].round(6) == round(clat, 6)) &
+        (df['lng'].round(6) == round(clng, 6))
+    ]
+    if not matched.empty:
+        st.session_state['selected_id'] = matched.iloc[0]['id']
 
 # ── 우측 패널: 선택된 설화 정보 ──────────────────────────────────────────────
 with info_col:
