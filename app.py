@@ -25,9 +25,13 @@ html, body, [class*="css"] {
         radial-gradient(ellipse at 80% 20%, rgba(196,163,90,0.04) 0%, transparent 60%);
 }
 
+/* ── Streamlit 상단 헤더 숨김 (페이지 타이틀 잘림 방지) ── */
+[data-testid="stHeader"] { display: none !important; }
+[data-testid="stMarkdownContainer"] { overflow: visible !important; }
+
 /* ── 메인 콘텐츠 패딩 ── */
 .block-container {
-    padding-top: 2.5rem;
+    padding-top: 2rem !important;
     padding-bottom: 2.5rem;
     max-width: 1200px;
 }
@@ -152,7 +156,7 @@ if not os.path.exists(DB_PATH):
 st.markdown("""
 <div style="text-align:center; padding: 2rem 0 1rem 0;">
   <div style="font-size:0.85rem; color:#8B1A1A; letter-spacing:4px; margin-bottom:0.5rem;">
-    한국학중앙연구원
+    한국학중앙연구원 X KUCLAB
   </div>
   <h1 style="font-size:2.2rem; font-weight:800; color:#2C1810; border:none; padding:0; margin:0;">
     한국구비문학대계

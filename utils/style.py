@@ -51,7 +51,9 @@ html, body, [class*="css"] { font-family: 'Nanum Myeongjo', Georgia, serif !impo
         radial-gradient(ellipse at 20% 50%, rgba(139,26,26,0.03) 0%, transparent 60%),
         radial-gradient(ellipse at 80% 20%, rgba(196,163,90,0.04) 0%, transparent 60%);
 }
-.block-container { padding-top: 2rem; padding-bottom: 2rem; max-width: 1200px; }
+[data-testid="stHeader"] { display: none !important; }
+[data-testid="stMarkdownContainer"] { overflow: visible !important; }
+.block-container { padding-top: 2rem !important; padding-bottom: 2rem; max-width: 1200px; }
 [data-testid="stSidebar"] { background-color: #EDE5D0; border-right: 1px solid #C4A35A44; }
 h1 { color: #2C1810 !important; font-weight: 800 !important;
      border-bottom: 2px solid #8B1A1A; padding-bottom: 0.4rem; margin-bottom: 0.8rem !important; }
@@ -80,9 +82,9 @@ hr { border-color: #C4A35A55 !important; }
 [data-testid="stTabs"] button[aria-selected="true"] { border-bottom-color: #8B1A1A !important; color: #8B1A1A !important; }
 .main-card { background: #FBF8F2; border: 1px solid #C4A35A66; border-top: 3px solid #8B1A1A;
              border-radius: 2px; padding: 1.5rem; height: 100%; box-shadow: 1px 2px 6px rgba(44,24,16,0.08); }
-.page-title { display: flex; align-items: center; gap: 0.7rem;
-              border-bottom: 2px solid #8B1A1A; padding-bottom: 0.5rem; margin-bottom: 1.2rem; }
-.page-title-text { font-size: 1.5rem; font-weight: 800; color: #2C1810; }
+.page-title { display: flex; align-items: center; gap: 0.7rem; overflow: visible;
+              border-bottom: 2px solid #8B1A1A; padding: 0.3rem 0 0.5rem 0; margin-bottom: 1.2rem; }
+.page-title-text { font-size: 1.5rem; font-weight: 800; color: #2C1810; white-space: nowrap; line-height: 1.3; }
 .page-title-sub { font-size: 0.85rem; color: #8B1A1A; margin-left: auto; letter-spacing: 1px; }
 .ai-note { color: #7A5C4A; font-size: 0.82rem; }
 .ai-note::before { content: "※ "; color: #8B1A1A; }
@@ -99,7 +101,7 @@ def page_title(section: str, subtitle: str):
     icon = ICONS.get(section, "")
     st.markdown(f"""
     <div class="page-title">
-      {icon}
+      <div style="flex-shrink:0;line-height:0">{icon}</div>
       <span class="page-title-text">{section} — {subtitle}</span>
     </div>
     """, unsafe_allow_html=True)
