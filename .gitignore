@@ -1,0 +1,15 @@
+# DB (빌드로 생성)
+data/folklore.db
+
+# 환경변수
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Streamlit
+.streamlit/secrets.toml
