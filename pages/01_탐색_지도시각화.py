@@ -42,6 +42,11 @@ def prepare_map_rows(cats: tuple):
         ])
     return rows
 
+@st.cache_data
+def build_coord_list(cats: tuple):
+    """클릭 매칭용 (lat, lng, id) 튜플 리스트 — 캐싱"""
+    return [(row[0], row[1], row[4]) for row in prepare_map_rows(cats)]
+
 df = load_data()
 
 # ── 사이드바: 카테고리 필터 ────────────────────────────────────────────────────
@@ -98,16 +103,22 @@ with map_col:
     map_data = st_folium(m, width="100%", height=600, returned_objects=["last_object_clicked"])
 
 # ── 클릭 이벤트 처리 ──────────────────────────────────────────────────────────
+# FastMarkerCluster는 JS 콜백 마커라 last_object_clicked_popup이 동작하지 않음
+# → last_object_clicked 좌표 기준 최근접 마커 탐색 (0.01도 ≈ 1km 임계값)
 clicked = map_data.get("last_object_clicked") if map_data else None
-if clicked and clicked.get("lat") and clicked.get("lng"):
+if clicked and clicked.get("lat") is not None and clicked.get("lng") is not None:
     clat, clng = clicked["lat"], clicked["lng"]
-    # 소수점 6자리 반올림 후 매칭 (부동소수점 오차 방지)
-    matched = df[
-        (df['lat'].round(6) == round(clat, 6)) &
-        (df['lng'].round(6) == round(clng, 6))
-    ]
-    if not matched.empty:
-        st.session_state['selected_id'] = matched.iloc[0]['id']
+    if selected_cats:
+        coord_list = build_coord_list(tuple(selected_cats))
+        threshold = 0.01 ** 2  # 0.01도² ≈ 1km 이내
+        best_id, best_d2 = None, threshold
+        for lat, lng, item_id in coord_list:
+            d2 = (lat - clat) ** 2 + (lng - clng) ** 2
+            if d2 < best_d2:
+                best_d2 = d2
+                best_id = item_id
+        if best_id:
+            st.session_state['selected_id'] = best_id
 
 # ── 우측 패널: 선택된 설화 정보 ──────────────────────────────────────────────
 with info_col:
