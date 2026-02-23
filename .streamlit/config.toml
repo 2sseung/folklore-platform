@@ -1,0 +1,7 @@
+[theme]
+base                = "light"
+primaryColor        = "#8B1A1A"        # 단청 적색
+backgroundColor     = "#F7F2E8"        # 한지 바탕
+secondaryBackgroundColor = "#EDE5D0"   # 황토색 사이드바
+textColor           = "#2C1810"        # 먹색
+font                = "serif"
