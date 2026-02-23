@@ -80,9 +80,9 @@ hr { border-color: #C4A35A55 !important; }
 [data-testid="stTabs"] button[aria-selected="true"] { border-bottom-color: #8B1A1A !important; color: #8B1A1A !important; }
 .main-card { background: #FBF8F2; border: 1px solid #C4A35A66; border-top: 3px solid #8B1A1A;
              border-radius: 2px; padding: 1.5rem; height: 100%; box-shadow: 1px 2px 6px rgba(44,24,16,0.08); }
-.page-title { display: flex; align-items: center; gap: 0.7rem;
+.page-title { display: flex; align-items: center; gap: 0.7rem; overflow: visible; min-height: 48px;
               border-bottom: 2px solid #8B1A1A; padding-bottom: 0.5rem; margin-bottom: 1.2rem; }
-.page-title-text { font-size: 1.5rem; font-weight: 800; color: #2C1810; }
+.page-title-text { font-size: 1.5rem; font-weight: 800; color: #2C1810; white-space: nowrap; }
 .page-title-sub { font-size: 0.85rem; color: #8B1A1A; margin-left: auto; letter-spacing: 1px; }
 .ai-note { color: #7A5C4A; font-size: 0.82rem; }
 .ai-note::before { content: "※ "; color: #8B1A1A; }
@@ -99,7 +99,7 @@ def page_title(section: str, subtitle: str):
     icon = ICONS.get(section, "")
     st.markdown(f"""
     <div class="page-title">
-      {icon}
+      <div style="flex-shrink:0;line-height:0">{icon}</div>
       <span class="page-title-text">{section} — {subtitle}</span>
     </div>
     """, unsafe_allow_html=True)
