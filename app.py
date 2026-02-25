@@ -154,6 +154,9 @@ if not os.path.exists(DB_PATH):
 
 st.markdown("""
 <div style="text-align:center; padding: 2rem 0 1rem 0;">
+  <div style="font-size:0.82rem; color:#7A5C4A; letter-spacing:2px; margin-bottom:0.4rem;">
+    고려대 인문사회디지털융합인재양성사업단
+  </div>
   <div style="font-size:1.05rem; color:#8B1A1A; letter-spacing:4px; margin-bottom:0.5rem;">
     KUCLAB
   </div>
